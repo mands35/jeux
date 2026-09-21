@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07110d">
+  <meta name="description" content="Coordonnées confidentielles pour lancer le Bound L’aventure commence.">
+  <title>Coordonnées confidentielles</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2307110d'/%3E%3Cpath d='M14 46c8-25 20-29 36-28' fill='none' stroke='%236de59f' stroke-width='5' stroke-linecap='round' stroke-dasharray='5 8'/%3E%3Ccircle cx='14' cy='46' r='6' fill='%236de59f'/%3E%3C/svg%3E">
+  <style>
+    :root { color-scheme: dark; --panel: rgba(7,22,15,.92); --green:#6de59f; --bright:#c7ffda; --text:#effff5; --muted:#98b6a3; --line:rgba(109,229,159,.22); }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0; min-height: 100svh; overflow: hidden; display:grid; place-items:center;
+      background: radial-gradient(circle at 68% 38%, rgba(38,127,73,.18), transparent 34%), linear-gradient(145deg,#010302 0%,#07110c 48%,#010302 100%);
+      color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    body::after { content:""; position:fixed; inset:0; pointer-events:none; background:repeating-linear-gradient(to bottom,transparent 0 3px,rgba(220,255,233,.025) 4px); animation:scan 7s linear infinite; }
+    .transmission {
+      position:relative; width:min(94vw,1080px); min-height:min(78svh,660px); display:grid;
+      grid-template-columns:minmax(290px,.82fr) minmax(390px,1.18fr); overflow:hidden;
+      border:1px solid rgba(109,229,159,.52); background:var(--panel);
+      box-shadow:0 28px 100px rgba(0,0,0,.58),inset 0 0 90px rgba(52,172,99,.035); isolation:isolate;
+    }
+    .transmission::before,.transmission::after { content:""; position:absolute; z-index:6; width:36px; height:36px; pointer-events:none; border-color:var(--green); }
+    .transmission::before { top:-1px; left:-1px; border-top:3px solid; border-left:3px solid; }
+    .transmission::after { right:-1px; bottom:-1px; border-right:3px solid; border-bottom:3px solid; }
+    .brief {
+      position:relative; z-index:3; display:flex; flex-direction:column; justify-content:center; gap:30px;
+      padding:clamp(38px,6vw,72px); border-right:1px solid var(--line);
+      background:linear-gradient(90deg,rgba(5,17,11,.94),rgba(5,17,11,.72));
+    }
+    .secure { position:absolute; top:22px; left:clamp(38px,6vw,72px); display:flex; align-items:center; gap:9px; color:var(--muted); font-size:.72rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    .secure::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 12px var(--green); animation:blink 1.2s steps(2,end) infinite; }
+    .kicker { margin:0 0 12px; color:var(--green); font-size:clamp(.78rem,1.5vw,.96rem); font-weight:900; letter-spacing:.2em; text-transform:uppercase; opacity:0; animation:reveal .6s .35s forwards; }
+    h1 { margin:0; max-width:500px; font-size:clamp(2.25rem,5vw,4.6rem); line-height:.98; letter-spacing:-.055em; text-transform:uppercase; opacity:0; transform:translateY(10px); animation:reveal .7s .65s forwards; }
+    .intel { display:grid; gap:13px; margin:0; }
+    .intel div { display:grid; grid-template-columns:98px 1fr; gap:16px; padding-top:12px; border-top:1px solid var(--line); opacity:0; transform:translateX(-8px); }
+    .intel div:nth-child(1) { animation:detail-in .5s 4.35s forwards; }
+    .intel div:nth-child(2) { animation:detail-in .5s 4.75s forwards; }
+    .intel div:nth-child(3) { animation:detail-in .5s 5.15s forwards; }
+    dt { color:var(--muted); font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+    dd { margin:0; font-size:clamp(.98rem,1.8vw,1.13rem); font-weight:690; line-height:1.35; }
+    .actions { display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(8px); animation:reveal .65s 5.85s forwards; }
+    .launch { display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding:0 25px; border:1px solid var(--green); background:var(--green); color:#041009; font-size:.88rem; font-weight:900; letter-spacing:.11em; text-decoration:none; text-transform:uppercase; white-space:nowrap; box-shadow:0 0 28px rgba(109,229,159,.18); transition:transform 180ms ease,background 180ms ease,box-shadow 180ms ease; }
+    .launch:hover { transform:translateY(-2px); background:var(--bright); box-shadow:0 8px 34px rgba(109,229,159,.27); }
+    .replay { border:0; background:transparent; color:var(--muted); cursor:pointer; font:inherit; font-size:.78rem; text-decoration:underline; text-underline-offset:4px; }
+    .launch:focus-visible,.replay:focus-visible { outline:3px solid var(--text); outline-offset:4px; }
+    .map { position:relative; min-height:520px; display:grid; place-items:center; overflow:hidden; background:linear-gradient(rgba(109,229,159,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(109,229,159,.07) 1px,transparent 1px),radial-gradient(circle at 52% 48%,rgba(52,172,99,.12),transparent 48%); background-size:42px 42px,42px 42px,auto; }
+    .map::before { content:"SECTEUR F-03  /  DONNÉES PARTIELLES"; position:absolute; top:22px; right:26px; z-index:2; color:var(--muted); font:700 .68rem/1 "Courier New",monospace; letter-spacing:.12em; }
+    .map svg { width:min(92%,610px); height:auto; filter:drop-shadow(0 0 16px rgba(109,229,159,.1)); }
+    .terrain { fill:none; stroke:rgba(109,229,159,.14); stroke-width:2; }
+    .route-shadow { fill:none; stroke:rgba(109,229,159,.12); stroke-width:14; stroke-linecap:round; stroke-linejoin:round; }
+    .route { fill:none; stroke:var(--green); stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:720; stroke-dashoffset:720; animation:draw-route 2.7s 1.15s cubic-bezier(.5,.05,.25,1) forwards; }
+    .route-dashes { fill:none; stroke:var(--bright); stroke-width:2; stroke-linecap:round; stroke-dasharray:4 13; stroke-dashoffset:720; opacity:.8; animation:draw-route 2.7s 1.15s cubic-bezier(.5,.05,.25,1) forwards; }
+    .start,.target { transform-box:fill-box; transform-origin:center; }
+    .start { opacity:0; animation:pin-in .45s .82s forwards; }
+    .target { opacity:0; animation:pin-in .5s 3.72s forwards; }
+    .pin-core { fill:var(--green); }
+    .pin-ring { fill:none; stroke:var(--green); stroke-width:3; opacity:.5; animation:ring 1.7s ease-out infinite; transform-box:fill-box; transform-origin:center; }
+    .question { fill:var(--bright); font:900 35px/1 Inter,sans-serif; text-anchor:middle; dominant-baseline:middle; }
+    .map-label { fill:var(--muted); font:800 14px/1 "Courier New",monospace; letter-spacing:1.8px; }
+    @keyframes draw-route { to { stroke-dashoffset:0; } }
+    @keyframes pin-in { from { opacity:0; transform:scale(.35); } to { opacity:1; transform:scale(1); } }
+    @keyframes ring { from { transform:scale(.55); opacity:.7; } to { transform:scale(1.55); opacity:0; } }
+    @keyframes reveal { to { opacity:1; transform:translate(0); } }
+    @keyframes detail-in { to { opacity:1; transform:translateX(0); } }
+    @keyframes blink { 50% { opacity:.35; } }
+    @keyframes scan { to { transform:translateY(8px); } }
+    @media (max-width:760px) {
+      body { overflow:auto; }
+      .transmission { width:94vw; min-height:92svh; grid-template-columns:1fr; }
+      .brief { order:2; gap:22px; padding:52px 26px 32px; border-top:1px solid var(--line); border-right:0; }
+      .secure { top:20px; left:26px; }
+      .map { order:1; min-height:42svh; }
+      .map::before { top:16px; right:18px; font-size:.6rem; }
+      .intel div { grid-template-columns:1fr; gap:4px; }
+      .actions { align-items:flex-start; flex-direction:column; }
+      .launch { width:100%; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      *,*::before,*::after { animation:none!important; }
+      .kicker,h1,.intel div,.actions,.start,.target { opacity:1; transform:none; }
+      .route,.route-dashes { stroke-dashoffset:0; }
+      .secure::before { box-shadow:none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="transmission" id="transmission" aria-label="Coordonnées confidentielles">
+    <section class="brief">
+      <div class="secure">Canal sécurisé</div>
+      <header><p class="kicker">Dossier classé</p><h1>Coordonnées confidentielles</h1></header>
+      <dl class="intel">
+        <div><dt>Destination</dt><dd>Confidentielle</dd></div>
+        <div><dt>Distance</dt><dd>Environ 300 mètres</dd></div>
+        <div><dt>Instructions</dt><dd>Elles seront révélées sur place</dd></div>
+      </dl>
+      <div class="actions">
+        <a class="launch" href="https://actionbound.com/bound/laventure-commence">Ouvrir le dossier</a>
+        <button class="replay" type="button" id="replay">Rejouer l’animation</button>
+      </div>
+    </section>
+    <section class="map" aria-label="Tracé confidentiel d’environ 300 mètres">
+      <svg viewBox="0 0 620 620" role="img" aria-labelledby="map-title map-desc">
+        <title id="map-title">Tracé vers une destination confidentielle</title>
+        <desc id="map-desc">Un trajet part du parking et s’interrompt devant un point d’interrogation.</desc>
+        <path class="terrain" d="M40 118 C155 70 248 160 350 105 S522 56 590 112"/>
+        <path class="terrain" d="M72 490 C170 420 232 520 342 468 S512 406 584 470"/>
+        <path class="terrain" d="M96 70 C122 188 58 256 118 360 S180 500 142 578"/>
+        <path class="terrain" d="M510 48 C460 160 544 250 476 350 S436 500 520 572"/>
+        <path class="route-shadow" d="M92 510 C138 465 154 410 204 380 C254 350 298 378 336 328 C371 282 354 228 413 202 C455 183 493 149 525 108"/>
+        <path class="route" d="M92 510 C138 465 154 410 204 380 C254 350 298 378 336 328 C371 282 354 228 413 202 C455 183 493 149 525 108"/>
+        <path class="route-dashes" d="M92 510 C138 465 154 410 204 380 C254 350 298 378 336 328 C371 282 354 228 413 202 C455 183 493 149 525 108"/>
+        <g class="start">
+          <circle class="pin-ring" cx="92" cy="510" r="22"/><circle class="pin-core" cx="92" cy="510" r="10"/><text class="map-label" x="116" y="517">PARKING</text>
+        </g>
+        <g class="target">
+          <circle class="pin-ring" cx="525" cy="108" r="35"/><circle cx="525" cy="108" r="28" fill="#07110d" stroke="#6de59f" stroke-width="3"/><text class="question" x="525" y="110">?</text>
+        </g>
+      </svg>
+    </section>
+  </main>
+  <script>
+    document.getElementById("replay").addEventListener("click", () => location.reload());
+  </script>
+</body>
+</html>
