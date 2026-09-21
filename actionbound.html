@@ -17,6 +17,14 @@
       color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
     body::after { content:""; position:fixed; inset:0; pointer-events:none; background:repeating-linear-gradient(to bottom,transparent 0 3px,rgba(220,255,233,.025) 4px); animation:scan 7s linear infinite; }
+    body.awaiting .transmission * { animation-play-state:paused!important; }
+    .gate { position:fixed; inset:0; z-index:50; display:grid; place-items:center; padding:24px; background:rgba(1,6,3,.92); backdrop-filter:blur(10px); transition:opacity .45s ease,visibility .45s ease; }
+    body:not(.awaiting) .gate { opacity:0; visibility:hidden; pointer-events:none; }
+    .gate-card { width:min(92vw,560px); padding:clamp(32px,7vw,58px); border:1px solid rgba(109,229,159,.52); background:rgba(7,22,15,.96); text-align:center; box-shadow:0 24px 90px rgba(0,0,0,.62),inset 0 0 60px rgba(52,172,99,.04); }
+    .gate-label { margin:0 0 14px; color:var(--green); font-size:.78rem; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
+    .gate-title { margin:0 0 30px; font-size:clamp(2rem,7vw,4rem); line-height:1; letter-spacing:-.045em; text-transform:uppercase; }
+    .start-button { min-height:58px; width:100%; border:1px solid var(--green); background:var(--green); color:#041009; cursor:pointer; font:900 .9rem/1 Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:.12em; text-transform:uppercase; transition:transform 180ms ease,background 180ms ease; }
+    .start-button:hover { transform:translateY(-2px); background:var(--bright); }
     .transmission {
       position:relative; width:min(94vw,1080px); min-height:min(78svh,660px); display:grid;
       grid-template-columns:minmax(290px,.82fr) minmax(390px,1.18fr); overflow:hidden;
@@ -45,8 +53,8 @@
     .actions { display:flex; align-items:center; gap:18px; opacity:0; transform:translateY(8px); animation:reveal .65s 5.85s forwards; }
     .launch { display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding:0 25px; border:1px solid var(--green); background:var(--green); color:#041009; font-size:.88rem; font-weight:900; letter-spacing:.11em; text-decoration:none; text-transform:uppercase; white-space:nowrap; box-shadow:0 0 28px rgba(109,229,159,.18); transition:transform 180ms ease,background 180ms ease,box-shadow 180ms ease; }
     .launch:hover { transform:translateY(-2px); background:var(--bright); box-shadow:0 8px 34px rgba(109,229,159,.27); }
-    .replay { border:0; background:transparent; color:var(--muted); cursor:pointer; font:inherit; font-size:.78rem; text-decoration:underline; text-underline-offset:4px; }
-    .launch:focus-visible,.replay:focus-visible { outline:3px solid var(--text); outline-offset:4px; }
+    .replay,.sound { border:0; background:transparent; color:var(--muted); cursor:pointer; font:inherit; font-size:.78rem; text-decoration:underline; text-underline-offset:4px; }
+    .launch:focus-visible,.replay:focus-visible,.sound:focus-visible,.start-button:focus-visible { outline:3px solid var(--text); outline-offset:4px; }
     .map { position:relative; min-height:520px; display:grid; place-items:center; overflow:hidden; background:linear-gradient(rgba(109,229,159,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(109,229,159,.07) 1px,transparent 1px),radial-gradient(circle at 52% 48%,rgba(52,172,99,.12),transparent 48%); background-size:42px 42px,42px 42px,auto; }
     .map::before { content:"SECTEUR F-03  /  DONNÉES PARTIELLES"; position:absolute; top:22px; right:26px; z-index:2; color:var(--muted); font:700 .68rem/1 "Courier New",monospace; letter-spacing:.12em; }
     .map svg { width:min(92%,610px); height:auto; filter:drop-shadow(0 0 16px rgba(109,229,159,.1)); }
@@ -87,7 +95,15 @@
     }
   </style>
 </head>
-<body>
+<body class="awaiting">
+  <audio id="theme-audio" src="xfiles.mp3" preload="auto" loop></audio>
+  <div class="gate" id="gate">
+    <div class="gate-card">
+      <p class="gate-label">Canal sécurisé</p>
+      <p class="gate-title">Transmission disponible</p>
+      <button class="start-button" type="button" id="start">Activer la transmission</button>
+    </div>
+  </div>
   <main class="transmission" id="transmission" aria-label="Coordonnées confidentielles">
     <section class="brief">
       <div class="secure">Canal sécurisé</div>
@@ -100,6 +116,7 @@
       <div class="actions">
         <a class="launch" href="https://actionbound.com/bound/laventure-commence">Ouvrir le dossier</a>
         <button class="replay" type="button" id="replay">Rejouer l’animation</button>
+        <button class="sound" type="button" id="sound">Couper le son</button>
       </div>
     </section>
     <section class="map" aria-label="Tracé confidentiel d’environ 300 mètres">
@@ -123,7 +140,38 @@
     </section>
   </main>
   <script>
-    document.getElementById("replay").addEventListener("click", () => location.reload());
+    const audio = document.getElementById("theme-audio");
+    const start = document.getElementById("start");
+    let transmission = document.getElementById("transmission");
+
+    audio.volume = 0.35;
+
+    function bindControls(root) {
+      const replay = root.querySelector("#replay");
+      const sound = root.querySelector("#sound");
+
+      sound.textContent = audio.muted ? "Activer le son" : "Couper le son";
+      sound.addEventListener("click", () => {
+        audio.muted = !audio.muted;
+        sound.textContent = audio.muted ? "Activer le son" : "Couper le son";
+      });
+
+      replay.addEventListener("click", () => {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+        const replacement = root.cloneNode(true);
+        root.replaceWith(replacement);
+        transmission = replacement;
+        bindControls(replacement);
+      });
+    }
+
+    bindControls(transmission);
+
+    start.addEventListener("click", () => {
+      document.body.classList.remove("awaiting");
+      audio.play().catch(() => {});
+    });
   </script>
 </body>
 </html>
